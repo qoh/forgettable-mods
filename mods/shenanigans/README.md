@@ -12,9 +12,9 @@ Version: 1.0
 > 2. tricky or questionable practices or conduct
 > 3. high-spirited or mischievous activity
 
-A collection of utilities for experimenting, messing with, or otherwise
-make up your own fun. Allows you to view from any angle, warp to different
-dungeons and spawn just about any object in the game on demand.
+A collection of utilities for experimenting, messing with the game,
+or otherwise make up your own fun. Allows you to view from any angle,
+warp to different dungeons and spawn almost any object in the game on demand.
 
 **This mod will spoil the game for you.
 Please do yourself a favor and play it first.**
