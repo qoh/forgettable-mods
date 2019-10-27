@@ -21,6 +21,12 @@ You can get a list of all registered commands with `/Help`.
 #### `/Help`
 Display a list of commands available on the server.
 
+#### `/Find <Target>` (admin only)
+Teleport yourself to somebody else.
+
+#### `/Fetch <Target>` (admin only)
+Teleport someone else to yourself.
+
 ## Developers
 
 ### Registering commands
@@ -53,3 +59,15 @@ registerServerCommand(
 #### `findClient(name: string) -> GameConnection`
 
 Finds a client whose name matches or contains (case-insensitive) `name`.
+
+#### `getClientPlayer(client: GameConnection) -> Player`
+
+Returns the effective player (a real player, or their ghost) for a client.
+
+## Changelog
+
+### v1.1
+
+* Added `/Find` command.
+* Added `/Fetch` command.
+* Added `getClientPlayer` utility function.

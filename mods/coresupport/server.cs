@@ -16,7 +16,7 @@ function registerServerCommand(%name, %desc, %args, %flags)
 		$CoreSupport::ServerCommandsSorted = false;
 	}
 
-	%isAdminOnly = false;
+	%adminOnly = false;
 
 	%flagCount = getRecordCount(%flags);
 
@@ -26,7 +26,7 @@ function registerServerCommand(%name, %desc, %args, %flags)
 
 		if (%flag $= "adminonly")
 		{
-			%isAdminOnly = true;
+			%adminOnly = true;
 		}
 		else
 		{
@@ -38,11 +38,17 @@ function registerServerCommand(%name, %desc, %args, %flags)
 
 	$CoreSupport::ServerCommandDesc[%name] = %desc;
 	$CoreSupport::ServerCommandArgs[%name] = %args;
-	$CoreSupport::ServerCommandAdminOnly[%name] = %isAdminOnly;
+	$CoreSupport::ServerCommandAdminOnly[%name] = %adminOnly;
 }
 
 registerServerCommand("Help",
 	"Display a list of commands available on the server.");
+registerServerCommand("Find",
+	"Teleport yourself to someone else.",
+	"Target\tplayername");
+registerServerCommand("Fetch",
+	"Teleport someone else to yourself.",
+	"Target\tplayername");
 
 $coreSupport_helpStartArg[false] = "<";
 $coreSupport_helpStartArg[true] = "[";
@@ -132,6 +138,86 @@ function serverCmdHelp(%client)
 		"Page Up <color:999999>scrolls <color:555555>==========");
 }
 
+function serverCmdFind(%client, %targetName)
+{
+	%clientPlayer = getClientPlayer(%client);
+
+	if (!isObject(%clientPlayer))
+	{
+		messageClient(%client, '',
+			"<color:ff0000>You do not have a body to teleport.");
+		return;
+	}
+
+	%targetClient = findClient(%targetName);
+
+	if (!isObject(%targetClient))
+	{
+		messageClient(%client, '',
+			"<color:ff0000>No player found by that name.");
+		return;
+	}
+
+	if (%client.getID() == %targetClient)
+	{
+		messageClient(%client, '', "<color:ff0000>Nothing happens...");
+		return;
+	}
+
+	%targetPlayer = getClientPlayer(%targetClient);
+
+	if (!isObject(%targetPlayer))
+	{
+		messageClient(%client, '',
+			"<color:ff0000>That player has no body to teleport to.");
+		return;
+	}
+
+	%clientPlayer.setTransform(
+		VectorAdd(%targetPlayer.getTransform(), "0 0 1"));
+	%clientPlayer.setVelocity("0 0 0");
+}
+
+function serverCmdFetch(%client, %targetName)
+{
+	%clientPlayer = getClientPlayer(%client);
+
+	if (!isObject(%clientPlayer))
+	{
+		messageClient(%client, '',
+			"<color:ff0000>You do not have a body to teleport players to.");
+		return;
+	}
+
+	%targetClient = findClient(%targetName);
+
+	if (!isObject(%targetClient))
+	{
+		messageClient(%client, '',
+			"<color:ff0000>No player found by that name.");
+		return;
+	}
+
+	if (%client.getID() == %targetClient)
+	{
+		messageClient(%client, '', "<color:ff0000>Nothing happens...");
+		return;
+	}
+
+	%targetPlayer = getClientPlayer(%targetClient);
+
+	if (!isObject(%targetPlayer))
+	{
+		messageClient(%client, '',
+			"<color:ff0000>That player has no body to teleport.");
+		return;
+	}
+
+	%targetPlayer.setTransform(
+		VectorAdd(%targetPlayer.getTransform(), "0 0 1"));
+	%targetPlayer.setVelocity("0 0 0");
+}
+
 function serverCmdCoreSupport_GetCommandList(%client)
 {
 	if (getRealTime() - %client.lastCommandListRequestTime < 1000)
@@ -216,6 +302,21 @@ function findClient(%name)
 		{
 			return %client;
 		}
+	}
+
+	return 0;
+}
+
+function getClientPlayer(%client)
+{
+	if (isObject(%client.player))
+	{
+		return %client.player;
+	}
+
+	if (isObject(%client.ghostPlayer))
+	{
+		return %client.ghostPlayer;
 	}
 
 	return 0;
