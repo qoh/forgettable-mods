@@ -111,6 +111,23 @@ package RespawningServer
 			return Parent::doGameOverScreen();
 		}
 	}
+
+	function onDungeonLoaded()
+	{
+		Parent::onDungeonLoaded();
+
+		%i = ClientGroup.getCount();
+
+		while (%i-- >= 0)
+		{
+			%client = ClientGroup.getObject(%i);
+
+			if (isObject(%client.ghostPlayer) && !isObject(%client.player))
+			{
+				respawning_respawnClient(%client, true);
+			}
+		}
+	}
 };
 
 activatePackage(RespawningServer);

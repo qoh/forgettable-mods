@@ -1,7 +1,7 @@
-Author: ns
+Author: ns  
 https://nssm.me
 
-Version: 1.0
+Version: 1.1
 
 # Respawning adventurers
 
@@ -26,3 +26,9 @@ What should happen to the items of players that die?
 * `"keep"`: Items are not dropped on death, and so are kept on respawn.
 * `"drop-no-new"`: Items are dropped on death, without giving items on respawn.
 * `"drop-new"`: Items are dropped on death, and new items are given on respawn.
+
+## Changelog
+
+### v1.1
+
+* Fixed dead players not respawning when changing dungeon.
